@@ -1,11 +1,12 @@
 var setup  = () => {
   console.log("RAN")
-  doc = document.querySelector("#reservations-table > div:nth-child(1) > div:nth-child(3)")
+  doc = document.querySelector("#reservations-table > div:nth-child(1) > div:nth-child(3) > button:nth-child(2) > span:nth-child(1) > span:nth-child(1)")
   if (doc == undefined) {
     setTimeout(setup, 100)
     return
   }
-  doc.innerHTML += '<button style="--button-bg: var(--mantine-color-blue-light); --button-hover: var(--mantine-color-blue-light-hover); --button-color: var(--mantine-color-blue-light-color); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;" class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root" data-variant="light" type="button"><span class="m_80f1301b mantine-Button-inner"><span class="m_811560b9 mantine-Button-label" id="wsd-import">Import WSD SR+</span></span></button>'
+  doc = document.querySelector(".mantine-visible-from-xs")
+  doc.innerHTML += '<a id="wsd-import" style="--button-bg:var(--mantine-color-cyan-light);--button-hover:var(--mantine-color-cyan-light-hover);--button-color:var(--mantine-color-cyan-light-color);--button-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent;padding-inline:var(--mantine-spacing-xs)" class="mantine-focus-auto mantine-active BaseLayout_button__ZTaOC m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root" data-variant="light"><span class="m_80f1301b mantine-Button-inner"><span class="m_811560b9 mantine-Button-label">WSD SR+ Import</span></span></a>'
   doc = document.getElementById("wsd-import")
   doc.onclick = async () => {
     var wsd_sr_plus = JSON.parse(prompt("Input Watership Down SR+ data"))
