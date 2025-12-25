@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+  "name": "Watership Down SR+ importer",
+  "version": "1.1",
+
+  "description": "Imports SR+ data from spreadsheet into raidres",
+  "icons": {
+    "48": "icons/if_source_code_103710.svg"
+  },
+
+  "permissions": [
+    "https://raidres.top/*",
+    "webRequest",
+    "webRequestBlocking",
+    "webRequestAuthProvider"
+  ],
+
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://raidres.top/*"],
+      "js": ["import.js"],
+      "world": "MAIN"
+    }
+  ],
+
+  "browser_action": {
+    "default_icon": {
+     "32" : "icons/if_source_code_103710.svg"
+    },
+    "default_title": "Watership Down SR+ Importer",
+    "default_popup": "popup/import.html",
+    "browser_style": true
+  }
+}
