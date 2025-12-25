@@ -9,32 +9,13 @@
   },
 
   "permissions": [
-    "https://raidres.top/*",
-    "webRequest",
-    "webRequestBlocking",
-    "webRequestAuthProvider"
+    "https://raidres.top/*"
   ],
-
-  "background": {
-    "scripts": [
-      "background.js"
-    ]
-  },
-
   "content_scripts": [
     {
       "matches": ["https://raidres.top/*"],
       "js": ["import.js"],
       "world": "MAIN"
     }
-  ],
-
-  "browser_action": {
-    "default_icon": {
-     "32" : "icons/if_source_code_103710.svg"
-    },
-    "default_title": "Watership Down SR+ Importer",
-    "default_popup": "popup/import.html",
-    "browser_style": true
-  }
+  ]
 }
