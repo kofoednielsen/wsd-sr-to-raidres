@@ -9,7 +9,7 @@ var setup  = () => {
   }
   // Inject WSD button
   const header_container = document.querySelector(".mantine-visible-from-xs")
-  header_container.innerHTML += `<a id="wsd-import" style="--button-bg:var(--mantine-color-cyan-light);--button-hover:var(--mantine-color-cyan-light-hover);--button-color:var(--mantine-color-cyan-light-color);--button-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent;padding-inline:var(--mantine-spacing-xs)" class="mantine-focus-auto mantine-active BaseLayout_button__ZTaOC m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root" data-variant="light"><span class="m_80f1301b mantine-Button-inner"><span class="m_811560b9 mantine-Button-label" id="wsd-import-text"></span></span></a>`
+  header_container.innerHTML += `<a id="wsd-import" style="--button-bg:var(--mantine-color-cyan-light);--button-hover:var(--mantine-color-cyan-light-hover);--button-color:var(--mantine-color-cyan-light-color);--button-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent;padding-inline:var(--mantine-spacing-xs)" class="mantine-focus-auto mantine-active BaseLayout_button__ZTaOC m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root" data-variant="light"><span class="m_80f1301b mantine-Button-inner"><span class="m_811560b9 mantine-Button-label" id="wsd-import-text">WSD SR+ ( No DB, click to upload )</span></span></a>`
   const wsd_button = document.getElementById("wsd-import")
   const wsd_button_text = document.getElementById("wsd-import-text")
 
