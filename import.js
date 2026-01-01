@@ -13,10 +13,10 @@ var setup  = () => {
   const wsd_button = document.getElementById("wsd-import")
   const wsd_button_text = document.getElementById("wsd-import-text")
 
-  // Update SR's at invterval ( if we have a database )
+  // Update SR's at interval ( if we have a database )
   async function updateSRs(onlyOnce) {
     console.log("interval ran")
-    if (!onlyOnce) { setTimeout(updateSRs, 10000) }
+    if (!onlyOnce) { setTimeout(updateSRs, 60000) }
     if (!wsd_sr_database.time) { return }
     const minutes = Math.floor((new Date().getTime() - wsd_sr_database.time)/1000/60)
     wsd_button_text.innerText = `WSD SR+ ( DB ${minutes} minutes old )`
