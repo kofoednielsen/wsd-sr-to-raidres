@@ -47,7 +47,8 @@ var setup  = async () => {
     var updates = []
     for (const res of sr_data.reservations) {
       const item_name = item_names[res.raidItemId]
-      const wsd_sr = wsd_sr_database.entries[`${res.character.name}@${item_name}`]
+      const player_name = res.character.name.toLowerCase()
+      const wsd_sr = wsd_sr_database.entries[`${player_name}@${item_name}`]
       if (wsd_sr && (res.srPlus.value !== wsd_sr.plus || !res.srPlus.isValid)) {
           updates.push({"reservationId": res.id, "isValid": true, "value": wsd_sr.plus})
       } else if (!wsd_sr && (res.srPlus.value !== 0 || !res.srPlus.isValid)) {
@@ -71,7 +72,8 @@ var setup  = async () => {
       const entries = await new Response(blob.stream().pipeThrough(new DecompressionStream("gzip"))).json()
       var entry_map = {}
       for (const entry of entries) {
-        entry_map[`${entry.player}@${entry.item}`] = entry
+        const player_name = entry.player.toLowerCase()
+        entry_map[`${player_name}@${entry.item}`] = entry
       }
       wsd_sr_database = { entries: entry_map, time: new Date().getTime() }
       localStorage.setItem("WSD_SR_PLUS", JSON.stringify(wsd_sr_database))
