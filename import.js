@@ -46,6 +46,7 @@ var setup  = async () => {
     wsd_button.style = STYLE_GREEN;
     var updates = []
     for (const res of sr_data.reservations) {
+      if (!res.srPlus) { continue }
       const item_name = item_names[res.raidItemId]
       const player_name = res.character.name.toLowerCase()
       const wsd_sr = wsd_sr_database.entries[`${player_name}@${item_name}`]

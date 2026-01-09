@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Watership Down SR+ importer",
-  "version": "2.2",
+  "version": "2.3",
 
   "description": "Imports SR+ data from spreadsheet into raidres",
   "icons": {
