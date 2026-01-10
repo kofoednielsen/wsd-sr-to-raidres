@@ -27,6 +27,14 @@ var setup  = async () => {
     item_ids[item.name] = item.id
   }
 
+  const plus_hundreds = {}
+  for (const entry of Object.values(wsd_sr_database.entries)) {
+    if (Object.values(item_names).includes(entry.item) && entry.plus >= 100) {
+      const player_name = entry.player.toLowerCase();
+      plus_hundreds[player_name] = [...(plus_hundreds[player_name] || []), entry.item]
+    }
+  }
+
   // Inject WSD button
   const header_container = document.querySelector(".mantine-visible-from-xs")
   header_container.innerHTML += `<a id="wsd-import" style=${STYLE_GREEN} class="mantine-focus-auto mantine-active BaseLayout_button__ZTaOC m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root" data-variant="light"><span class="m_80f1301b mantine-Button-inner"><span class="m_811560b9 mantine-Button-label" id="wsd-import-text">WSD SR+ ( No database, click to import )</span></span></a>`
@@ -53,6 +61,42 @@ var setup  = async () => {
       return
     }
     wsd_button.style = STYLE_GREEN
+
+    var srs_added = false
+    // create plus hundreds
+    var player_srs = {}
+    for (const res of sr_data.reservations) {
+      const player_name = res.character.name.toLowerCase()
+      player_srs[player_name] = { items: [...(player_srs[player_name]?.items || []), item_names[res.raidItemId]], res }
+    }
+    for (const name of Object.keys(player_srs)) {
+      const missing = (new Set(plus_hundreds[name]).difference(new Set(player_srs[name].items))).values()
+      for (const item_name of missing) {
+        const item_id = item_ids[item_name]
+        console.log(item_name)
+        console.log(item_id)
+        const res = player_srs[name].res
+        const r = await fetch("https://raidres.top/api/raid-event-reservations", {
+          method: "POST",
+          body: JSON.stringify({
+            "reference": SHEET_ID,
+            "characterName": res.character.name,
+            "characterClass": res.character.class,
+            "specialization": res.character.specialization,
+            "raidItemIds": [ item_id ],
+            "comment": "indirect",
+            "isTemporary": false,
+            "srPlus": []
+          })
+        })
+        if (r.ok) { srs_added = true }
+      }
+    }
+
+    // If we added new sr's, refetch
+    if (srs_added) {
+      sr_data = await (await fetch(`https://raidres.top/api/events/${SHEET_ID}`)).json()
+    }
 
     // update sr plus
     var updates = []
