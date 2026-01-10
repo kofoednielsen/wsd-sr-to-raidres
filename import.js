@@ -2,6 +2,11 @@ var wsd_sr_database = JSON.parse(localStorage.getItem("WSD_SR_PLUS") || "{}")
 
 const STYLE_RED = "--button-bg:var(--mantine-color-red-light);--button-hover:var(--mantine-color-red-light-hover);--button-color:var(--mantine-color-red-light-color);--button-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent;padding-inline:var(--mantine-spacing-xs)" 
 const STYLE_GREEN = "--button-bg:var(--mantine-color-green-light);--button-hover:var(--mantine-color-green-light-hover);--button-color:var(--mantine-color-green-light-color);--button-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent;padding-inline:var(--mantine-spacing-xs)" 
+const STYLE_ORANGE = "--button-bg:var(--mantine-color-orange-light);--button-hover:var(--mantine-color-orange-light-hover);--button-color:var(--mantine-color-orange-light-color);--button-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent;padding-inline:var(--mantine-spacing-xs)" 
+const now = new Date()
+var LAST_7D_RESET = new Date();
+LAST_7D_RESET.setUTCDate(LAST_7D_RESET.getUTCDate() -  ((LAST_7D_RESET.getUTCDay() + 4) % 7))
+LAST_7D_RESET.setUTCHours(4)
 
 
 var setup  = async () => {
@@ -15,14 +20,16 @@ var setup  = async () => {
   var sr_data = await (await fetch(`https://raidres.top/api/events/${SHEET_ID}`)).json()
   const RAID_ID = sr_data.raidId
   const item_names = {}
+  const item_ids = {}
   const item_data = await (await fetch(`https://raidres.top/raids/raid_${RAID_ID}.json`)).json();
   for (const item of item_data.raidItems) {
     item_names[item.id] = item.name
+    item_ids[item.name] = item.id
   }
 
   // Inject WSD button
   const header_container = document.querySelector(".mantine-visible-from-xs")
-  header_container.innerHTML += `<a id="wsd-import" style=${STYLE_GREEN} class="mantine-focus-auto mantine-active BaseLayout_button__ZTaOC m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root" data-variant="light"><span class="m_80f1301b mantine-Button-inner"><span class="m_811560b9 mantine-Button-label" id="wsd-import-text">WSD SR+ ( No database, click to upload )</span></span></a>`
+  header_container.innerHTML += `<a id="wsd-import" style=${STYLE_GREEN} class="mantine-focus-auto mantine-active BaseLayout_button__ZTaOC m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root" data-variant="light"><span class="m_80f1301b mantine-Button-inner"><span class="m_811560b9 mantine-Button-label" id="wsd-import-text">WSD SR+ ( No database, click to import )</span></span></a>`
   const wsd_button = document.getElementById("wsd-import")
   const wsd_button_text = document.getElementById("wsd-import-text")
 
@@ -31,19 +38,23 @@ var setup  = async () => {
     if (!onlyOnce) { setTimeout(updateSRs, 120000) } // every 2 minutes
     if (!wsd_sr_database.time) { wsd_button.style = STYLE_RED; return }
 
-    const minutes = Math.floor((new Date().getTime() - wsd_sr_database.time)/1000/60)
-    if (minutes < 60) {
-      wsd_button_text.innerText = `WSD SR+ ( ${minutes} minutes old database )`
-    } else {
-      hours = Math.floor(minutes / 60)
-      wsd_button_text.innerText = `WSD SR+ ( ${hours} hours old database )`
+    // Database is outdated if it's from previous reset
+    if (wsd_sr_database.time < LAST_7D_RESET.getTime()) {
+      wsd_button_text.innerText = `WSD SR+ ( database is outdated, click to import )`
+      wsd_button.style = STYLE_RED;
+      return
     }
+    wsd_button_text.innerText = `WSD SR+ ( database is up-to-date )`
 
     var sr_data = await (await fetch(`https://raidres.top/api/events/${SHEET_ID}`)).json()
     const hours_since_raid_start = (new Date() - new Date(sr_data.startTime)) / 1000 / 60 / 60
-    if (hours_since_raid_start > 1) { wsd_button.style = STYLE_RED; return }
+    if (hours_since_raid_start > 1) {
+      wsd_button.style = STYLE_ORANGE;
+      return
+    }
+    wsd_button.style = STYLE_GREEN
 
-    wsd_button.style = STYLE_GREEN;
+    // update sr plus
     var updates = []
     for (const res of sr_data.reservations) {
       if (!res.srPlus) { continue }
